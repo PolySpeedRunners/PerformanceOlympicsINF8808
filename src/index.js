@@ -41,6 +41,7 @@ import { cleanNullValues, convertYearToInt, filterByYear, filterNonOlympics, gro
       data = cleanNullValues(data);
       data = convertYearToInt(data);
       data = filterNonOlympics(data);
+      // We can always choose to a year later than 1960
       data = filterByYear(data,1960);
       data = groupByYear(data);
       console.log(data);
