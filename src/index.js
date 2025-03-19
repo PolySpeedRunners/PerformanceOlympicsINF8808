@@ -9,7 +9,7 @@ import { cleanNullValues, convertYearToInt, filterByYear, filterNonOlympics, gro
  * @version v1.0.0
  */
 
-(function (d3) {
+(async function (d3) {
   const svgSize = {
     width: 800,
     height: 625
@@ -21,48 +21,25 @@ import { cleanNullValues, convertYearToInt, filterByYear, filterNonOlympics, gro
   // helper.appendGraphLabels(d3.select('.main-svg'))
   // helper.initPanelDiv()
 
-  build()
+  await build();
 
   /**
    *   This function builds the graph.
    */
-  function build () {
-    // var color = d3.scaleOrdinal(d3.schemeCategory10)
-
-    // var projection = helper.getProjection()
-
-    // var path = helper.getPath(projection)
-
-    // d3.json('./montreal.json').then(function (data) {
-    //   data = preprocess.reverseGeoJsonCoordinates(data)
-    //   viz.mapBackground(data, path, viz.showMapLabel)
-    // })
-    d3.csv('./results.csv').then(function (data) {
-      data = cleanNullValues(data);
-      data = convertYearToInt(data);
-      data = filterNonOlympics(data);
-      // We can always choose to a year later than 1960
-      data = filterByYear(data,1960);
-      data = groupByYear(data);
-      console.log(data);
-      console.log(Object.keys(data).length);
-    })
-
-    d3.csv('./noc_regions.csv').then(function (data) {
-      console.log(data);
-    })
-
-    // d3.json('./projetpietonnisation2017.geojson').then(function (data) {
-    //   preprocess.convertCoordinates(data, projection)
-    //   preprocess.simplifyDisplayTitles(data)
-
-    //   viz.colorDomain(color, data)
-    //   viz.mapMarkers(data, color, panel)
-
-    //   legend.drawLegend(color, d3.select('.main-svg'))
-
-    //   const simulation = helper.getSimulation(data)
-    //   helper.simulate(simulation)
-    // })
+  async function build () {
+    let resultsData = await d3.csv('./results.csv');
+    resultsData = cleanNullValues(resultsData);
+    resultsData = convertYearToInt(resultsData);
+    resultsData = filterNonOlympics(resultsData);
+    resultsData = filterByYear(resultsData, 1960);
+    resultsData = groupByYear(resultsData);
+    console.log(resultsData);
+    let nocRegionsData = await d3.csv('./noc_regions.csv');
+    const nocMap = new Map(nocRegionsData.map(d => [d.NOC, d.region]));
+    console.log(nocMap);
+    let gdpData = await d3.dsv(';', './gdp_countries.csv');
+    let populationData = await d3.csv('./populations.csv');
+    console.log(gdpData);
+    console.log(populationData);
   }
 })(d3)
