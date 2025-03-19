@@ -37,7 +37,7 @@ import { cleanNullValues, convertYearToInt, filterByYear, filterNonOlympics, gro
     let nocRegionsData = await d3.csv('./noc_regions.csv');
     const nocMap = new Map(nocRegionsData.map(d => [d.NOC, d.region]));
     console.log(nocMap);
-    let gdpData = await d3.dsv(';', './gdp_countries.csv');
+    let gdpData = await d3.csv('./gdp.csv');
     let populationData = await d3.csv('./populations.csv');
     console.log(gdpData);
     console.log(populationData);
