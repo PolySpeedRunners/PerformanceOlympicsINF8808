@@ -98,6 +98,7 @@ export function computeScoresByYearSeason(resultsData) {
 }
 // https://en.wikipedia.org/wiki/List_of_IOC_country_codes
 // ROC is RUSSIA
+// NEEDS TO CHECK THE DIFFERENCE IN COUNTRY CODE LIKE SINGAPORE, LEBANON
 export function convertNocToCountry(results, nocMap) {
   return Object.fromEntries(
       Object.entries(results).map(([yearSeason, nocScores]) => {
