@@ -63,3 +63,54 @@ export function groupByYear(data) {
     }, {});
   }
 
+
+export function getMedalValue(medal) {
+  return medal === "Gold" ? 3 :
+          medal === "Silver" ? 2 :
+          medal === "Bronze" ? 1 : 0;
+}
+
+export function computeScoresByYearSeason(resultsData) {
+  return Object.fromEntries(
+      Object.entries(resultsData).map(([key, athletes]) => {
+          // Reset added combinations for each year-season key
+          const addedCombinations = new Set();
+
+          const nocScores = d3.rollup(
+              athletes,
+              (group) => {
+                  return d3.sum(group, (d) => {
+                      const combination = `${d.discipline}-${d.event}-${d.noc}-${d.medal}`;
+
+                      // Prevents team work to be counted multiple times
+                      if (!addedCombinations.has(combination) && getMedalValue(d.medal) > 0) {
+                          addedCombinations.add(combination);
+                          return getMedalValue(d.medal);
+                      }
+                      return 0; 
+                  });
+              },
+              (d) => d.noc
+          );
+          return [key, Object.fromEntries(nocScores)];
+      })
+  );
+}
+// https://en.wikipedia.org/wiki/List_of_IOC_country_codes
+// ROC is RUSSIA
+export function convertNocToCountry(results, nocMap) {
+  return Object.fromEntries(
+      Object.entries(results).map(([yearSeason, nocScores]) => {
+          const countryScores = [];
+          for (const [noc, score] of Object.entries(nocScores)) {
+              const country = nocMap.get(noc) || 'Unknown'; // Fallback to 'Unknown' if NOC isn't found
+              countryScores.push({
+                  countryName: country,
+                  medals: score
+              });
+          }
+          return [yearSeason, countryScores];
+      })
+  );
+}
+

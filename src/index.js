@@ -1,6 +1,6 @@
 'use strict';
 
-import { cleanNullValues, convertYearToInt, filterByYear, filterNonOlympics, groupByYear } from "./scripts/preprocess";
+import { cleanNullValues, convertYearToInt, filterByYear, filterNonOlympics, groupByYear, computeScoresByYearSeason, convertNocToCountry } from "./scripts/preprocess";
 
 
 /**
@@ -37,9 +37,16 @@ import { cleanNullValues, convertYearToInt, filterByYear, filterNonOlympics, gro
     let nocRegionsData = await d3.csv('./noc_regions.csv');
     const nocMap = new Map(nocRegionsData.map(d => [d.NOC, d.region]));
     console.log(nocMap);
-    let gdpData = await d3.csv('./gdp.csv');
-    let populationData = await d3.csv('./populations.csv');
+    let gdpData = await d3.csv('./gdp.csv'); // NEEDS DATA ClEANING
+    let populationData = await d3.csv('./populations.csv'); // NEEDS DATA CLEANING
     console.log(gdpData);
     console.log(populationData);
+
+  const scoresByYearSeason = computeScoresByYearSeason(resultsData);
+  console.log(scoresByYearSeason);
+  const resultsWithCountryNames = convertNocToCountry(scoresByYearSeason, nocMap);
+  console.log(resultsWithCountryNames);
+
+
   }
 })(d3)
