@@ -115,3 +115,39 @@ export function convertNocToCountry(results, nocMap) {
   );
 }
 
+
+export function computeDisciplineScoresByCountry(resultsData, nocMap) {
+  return Object.fromEntries(
+      Object.entries(resultsData).map(([key, athletes]) => {
+          const addedCombinations = new Set();
+
+          const disciplineScores = d3.rollup(
+              athletes,
+              (group) => {
+                  const countryName = nocMap.get(group[0].noc) || 'Unknown';
+
+                  const result = { countryName, totalMedals: 0 };
+
+                  for (const d of group) {
+                      const combination = `${d.discipline}-${d.event}-${d.noc}-${d.medal}`;
+                      const medalValue = getMedalValue(d.medal);
+
+                      if (!addedCombinations.has(combination) && medalValue > 0) {
+                          addedCombinations.add(combination);
+
+                          result[d.discipline] = (result[d.discipline] || 0) + medalValue;
+                          result.totalMedals += medalValue;
+                      }
+                  }
+
+                  return result;
+              },
+              (d) => d.noc
+          );
+
+          return [key, Object.fromEntries(disciplineScores)];
+      })
+  );
+}
+
+
