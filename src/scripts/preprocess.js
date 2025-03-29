@@ -152,7 +152,7 @@ export function computeDisciplineScoresByCountry(resultsData, nocMap) {
 
 export function findAndFixMissingCountries(gdpData, nocMap, countryMap) {
   let counter = 0;
-  // May need to fix noc region csv
+  // May need to fix noc region csv such as West Germany, East Germany, Russia, etc
   gdpData.forEach(entry => {
       const countryCode = entry["Country Code"];
       const countryName = entry["Country Name"];
