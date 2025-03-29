@@ -10,6 +10,8 @@ import {
   convertNocToCountry,
   computeDisciplineScoresByCountry,
   findAndFixMissingCountries,
+  addPopulationToMedalData,
+  addGDPToMedalData,
 } from "./scripts/preprocess";
 
 /**
@@ -60,10 +62,12 @@ import {
       nocMap
     );
     console.log(resultsWithCountryNames);
-    const test = computeDisciplineScoresByCountry(resultsData, nocMap); // TO KEEP, BETTER THAN resultsWithCountryNames
-    console.log(test);
-    // NEEDS TO FIX COUNTRIES LIKE RUSSIA, SINGAPORE, ETC
+    const medalData = computeDisciplineScoresByCountry(resultsData, nocMap); // TO KEEP, BETTER THAN resultsWithCountryNames
+    // NEEDS TO FIX COUNTRIES LIKE RUSSIA AND GERMANY
     findAndFixMissingCountries(gdpData, nocMap, countryMap);
     findAndFixMissingCountries(populationData, nocMap, countryMap);
+    const populationMedalData=addPopulationToMedalData(medalData, populationData);
+    const populationGDPMedalData = addGDPToMedalData(populationMedalData, populationData);
+    console.log(populationGDPMedalData);
   }
 })(d3);

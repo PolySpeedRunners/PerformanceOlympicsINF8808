@@ -174,3 +174,27 @@ export function findAndFixMissingCountries(gdpData, nocMap, countryMap) {
 }
 
 
+export function addDataToMedalData(medalData, data, dataKey, mapKey) {
+  const dataMap = new Map(data.map(entry => [entry[mapKey], entry]));
+
+  Object.entries(medalData).forEach(([yearSeason, countries]) => {
+    const year = yearSeason.split(",")[0];
+    
+    Object.entries(countries).forEach(([NOC, countryData]) => {
+      const dataEntry = dataMap.get(NOC) || dataMap.get(countryData.countryName);
+      countryData[dataKey] = dataEntry && dataEntry[year] ? parseFloat(dataEntry[year]) || null : null;
+    });
+  });
+
+  return medalData;
+}
+
+export function addPopulationToMedalData(medalData, populationData) {
+  return addDataToMedalData(medalData, populationData, "population", "Country Code");
+}
+
+export function addGDPToMedalData(medalData, gdpData) {
+  return addDataToMedalData(medalData, gdpData, "gdp", "Country Code");
+}
+
+
