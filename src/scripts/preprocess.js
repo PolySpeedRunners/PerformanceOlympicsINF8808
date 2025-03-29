@@ -150,4 +150,12 @@ export function computeDisciplineScoresByCountry(resultsData, nocMap) {
   );
 }
 
+export function findMissingCountries(gdpData, nocMap) {
+  gdpData.forEach(entry => {
+      if (!nocMap.has(entry["Country Code"])) {
+          console.log(`Missing: ${entry["Country Code"]} - ${entry["Country Name"]}`);
+      }
+  });
+}
+
 

@@ -1,6 +1,6 @@
 'use strict';
 
-import { cleanNullValues, convertYearToInt, filterByYear, filterNonOlympics, groupByYear, computeScoresByYearSeason, convertNocToCountry, computeDisciplineScoresByCountry } from "./scripts/preprocess";
+import { cleanNullValues, convertYearToInt, filterByYear, filterNonOlympics, groupByYear, computeScoresByYearSeason, convertNocToCountry, computeDisciplineScoresByCountry, findMissingCountries } from "./scripts/preprocess";
 
 
 /**
@@ -48,6 +48,7 @@ import { cleanNullValues, convertYearToInt, filterByYear, filterNonOlympics, gro
   console.log(resultsWithCountryNames);
   const test = computeDisciplineScoresByCountry(resultsData, nocMap); // TO KEEP, BETTER THAN resultsWithCountryNames
   console.log(test);
+  findMissingCountries(gdpData, nocMap);
 
 
   }
