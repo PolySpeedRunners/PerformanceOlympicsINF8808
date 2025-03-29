@@ -150,12 +150,27 @@ export function computeDisciplineScoresByCountry(resultsData, nocMap) {
   );
 }
 
-export function findMissingCountries(gdpData, nocMap) {
+export function findAndFixMissingCountries(gdpData, nocMap, countryMap) {
+  let counter = 0;
+  // May need to fix noc region csv
   gdpData.forEach(entry => {
-      if (!nocMap.has(entry["Country Code"])) {
-          console.log(`Missing: ${entry["Country Code"]} - ${entry["Country Name"]}`);
+      const countryCode = entry["Country Code"];
+      const countryName = entry["Country Name"];
+
+      if (!nocMap.has(countryCode)) {
+          if (countryMap.has(countryName)) {
+              // Reassign country code based on countryMap
+              const newCode = countryMap.get(countryName);
+              entry["Country Code"] = newCode;
+              // console.log(`Reassigned: ${countryName} -> ${newCode}`);
+          } else {
+              console.log(`Missing: ${countryCode} - ${countryName}`);
+              counter++;
+          }
       }
   });
+
+  console.log(`Total missing after reassignment: ${counter}`);
 }
 
 
